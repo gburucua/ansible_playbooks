@@ -1,0 +1,16 @@
+---
+- name: Check for updates on Ubuntu
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update the apt cache
+      apt:
+        update_cache: yes
+
+    - name: List available updates
+      command: apt list --upgradable
+      register: update_output
+
+    - name: Show available updates
+      debug:
+        msg: "{{ update_output.stdout_lines }}"
