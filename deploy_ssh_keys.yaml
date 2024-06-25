@@ -1,0 +1,37 @@
+---
+- name: Deploy SSH keys to servers
+  hosts: all  # Replace with your inventory group or specific hosts
+  become: true  # If sudo access is required to copy keys and set permissions
+  
+  tasks:
+    - name: Ensure SSH directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.ssh"
+        state: directory
+        mode: '0700'
+      delegate_to: "{{ inventory_hostname }}"
+    
+    - name: Copy SSH public key to authorized_keys file
+      ansible.builtin.copy:
+        content: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        dest: "{{ ansible_user_dir }}/.ssh/authorized_keys"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+      delegate_to: "{{ inventory_hostname }}"
+    
+    - name: Ensure correct permissions on .ssh directory
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.ssh"
+        state: directory
+        mode: '0700'
+      delegate_to: "{{ inventory_hostname }}"
+      
+    - name: Ensure correct permissions on authorized_keys file
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.ssh/authorized_keys"
+        state: file
+        mode: '0600'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      delegate_to: "{{ inventory_hostname }}"
