@@ -1,6 +1,7 @@
 ---
 - name: Check for CentOS machines in inventory
   hosts: all  # Specify the group or hosts you want to check
+  gather_facts: no  # Disable automatic fact gathering
 
   tasks:
     - name: Gather facts
