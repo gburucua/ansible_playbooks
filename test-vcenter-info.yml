@@ -1,0 +1,20 @@
+---
+- name: Test connection to vCenter API and list VM info
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  tasks:
+    - name: Get information about a VM
+      vmware_guest_info:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        name: "{{ vm_name }}"
+      register: vm_info
+
+    - name: Show info
+      debug:
+        var: vm_info
