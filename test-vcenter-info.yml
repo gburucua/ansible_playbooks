@@ -1,20 +1,26 @@
 ---
-- name: Test connection to vCenter API and list VM info
-  hosts: localhost
-  gather_facts: no
+- name: Gather info from all VMs discovered in inventory
+  hosts: all
+  gather_facts: false
   collections:
     - community.vmware
 
+  vars:
+    vcenter_hostname: "10.100.39.2"
+    vcenter_username: "g.burucuasrvadm"
+    vcenter_password: "ElcucuGerardin1390$"
+    validate_certs: false
+
   tasks:
-    - name: Get information about a VM
+    - name: Gather info for each VM from vCenter
       vmware_guest_info:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
-        validate_certs: false
-        name: "{{ vm_name }}"
+        validate_certs: "{{ validate_certs }}"
+        name: "{{ inventory_hostname }}"
       register: vm_info
 
-    - name: Show info
+    - name: Show VM info
       debug:
         var: vm_info
