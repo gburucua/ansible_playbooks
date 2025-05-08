@@ -18,8 +18,11 @@
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         validate_certs: "{{ validate_certs }}"
+        datacenter: "HST"
+        folder: "/HST/vm/ROOT-VPS-CLIENTS"
       register: all_vms
 
     - name: Show names of all VMs
       debug:
-        var: all_vms.virtual_machines
+        msg: "{{ item.guest_name }}"
+      loop: "{{ all_vms.virtual_machines }}"
