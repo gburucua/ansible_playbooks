@@ -1,0 +1,43 @@
+---
+- name: Create a VM from a template
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  vars:
+    vcenter_hostname: "10.100.39.2"
+    vcenter_username: "g.burucuasrvadm"
+    vcenter_password: "ElcucuGerardin1390$"
+    validate_certs: false
+
+  tasks:
+    - name: Deploy a VM from template
+      vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: "{{ validate_certs }}"
+        datacenter: "HST"
+        folder: "/HST/vm/ROOT-VPS-CLIENTS/PROD-VPS"
+        name: "new-vm-from-awx"
+        template: "ubuntu24"
+        cluster: "VPS"
+        resource_pool: "ROOT-VPS-CLIENTS"
+        state: poweredon
+        networks:
+          - name: "VM Network"
+            type: static
+            ip: "80.94.97.3"
+            netmask: "255.255.255.128"
+            gateway: "80.94.97.1"
+        hardware:
+          memory_mb: 2048
+          num_cpus: 2
+        customization:
+          hostname: "new-vm"
+          domain: "prod.lan"
+      register: deploy_result
+
+    - debug:
+        var: deploy_result.instance.ip_address
