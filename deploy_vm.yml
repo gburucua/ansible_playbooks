@@ -19,7 +19,7 @@
         password: "{{ vcenter_password }}"
         validate_certs: "{{ validate_certs }}"
         datacenter: "HST"
-        folder: "/HST/vm/ROOT-VPS-CLIENTS/PROD-VPS"
+        folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI"
         name: "new-vm-2nics"
         template: "ubuntu24"
         cluster: "VPS"
@@ -47,7 +47,7 @@
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
         validate_certs: "{{ validate_certs }}"
-        name: "new-vm-2nics"
+        name: "testgb-awx"
         datacenter: "HST"
         cluster: "VPS"
       register: guest_info
