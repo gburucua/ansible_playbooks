@@ -1,5 +1,5 @@
 ---
-- name: Create a VM from a template using DHCP network
+- name: Create a VM from a template with two network interfaces
   hosts: localhost
   gather_facts: no
   collections:
@@ -10,10 +10,9 @@
     vcenter_username: "g.burucuasrvadm"
     vcenter_password: "ElcucuGerardin1390$"
     validate_certs: false
-    vm_name: "new-vm-from-awx-dhcp"
 
   tasks:
-    - name: Deploy a VM from template
+    - name: Deploy a VM from template with 2 NICs
       vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -21,35 +20,41 @@
         validate_certs: "{{ validate_certs }}"
         datacenter: "HST"
         folder: "/HST/vm/ROOT-VPS-CLIENTS/PROD-VPS"
-        name: "{{ vm_name }}"
+        name: "new-vm-2nics"
         template: "ubuntu24"
         cluster: "VPS"
         resource_pool: "ROOT-VPS-CLIENTS"
         state: poweredon
         networks:
+          - name: "dVLAN-PROD-133"
+            type: static
+            ip: "80.94.97.11"
+            netmask: "255.255.255.128"
+            gateway: "80.94.97.1"
           - name: "dVLAN-ADMIN-1366"
             type: dhcp
         hardware:
           memory_mb: 2048
           num_cpus: 2
         customization:
-          hostname: "testgb-awx-dhcp"
+          hostname: "testgb-awx"
           domain: "prod.lan"
       register: deploy_result
 
-    - name: Wait for VMware Tools to report IP address
+    - name: Wait for VMware tools to report IPs
       vmware_guest_info:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
-        validate_certs: false
+        validate_certs: "{{ validate_certs }}"
+        name: "new-vm-2nics"
         datacenter: "HST"
-        name: "{{ vm_name }}"
-      register: vm_info
+        cluster: "VPS"
+      register: guest_info
       retries: 10
       delay: 15
-      until: vm_info.instance.ip_address is defined and vm_info.instance.ip_address != ""
+      until: guest_info.instance.ip_address is defined and guest_info.instance.ip_address != ""
 
-    - name: Show assigned IP address
+    - name: Debug collected IP addresses
       debug:
-        msg: "VM IP address is {{ vm_info.instance.ip_address }}"
+        var: guest_info.instance.ip_address
