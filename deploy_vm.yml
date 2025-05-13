@@ -28,7 +28,7 @@
         networks:
           - name: "dVLAN-PROD-133"
             type: static
-            ip: "80.94.97.3"
+            ip: "80.94.97.11"
             netmask: "255.255.255.128"
             gateway: "80.94.97.1"
         hardware:
