@@ -20,7 +20,7 @@
         validate_certs: "{{ validate_certs }}"
         datacenter: "HST"
         folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI"
-        name: "new-vm-2nics"
+        name: "testgb-awx"
         template: "ubuntu24"
         cluster: "VPS"
         resource_pool: "ROOT-VPS-CLIENTS"
@@ -28,7 +28,7 @@
         networks:
           - name: "dVLAN-PROD-133"
             type: static
-            ip: "80.94.97.11"
+            ip: "80.94.97.10"
             netmask: "255.255.255.128"
             gateway: "80.94.97.1"
           - name: "dVLAN-ADMIN-1366"
