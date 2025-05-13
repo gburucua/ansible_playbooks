@@ -1,5 +1,5 @@
 ---
-- name: Create a VM from a template
+- name: Create a VM from a template using DHCP network
   hosts: localhost
   gather_facts: no
   collections:
@@ -10,7 +10,7 @@
     vcenter_username: "g.burucuasrvadm"
     vcenter_password: "ElcucuGerardin1390$"
     validate_certs: false
-    vm_name: "new-vm-from-awx"
+    vm_name: "new-vm-from-awx-dhcp"
 
   tasks:
     - name: Deploy a VM from template
@@ -27,20 +27,17 @@
         resource_pool: "ROOT-VPS-CLIENTS"
         state: poweredon
         networks:
-          - name: "dVLAN-PROD-133"
-            type: static
-            ip: "80.94.97.11"
-            netmask: "255.255.255.128"
-            gateway: "80.94.97.1"
+          - name: "dVLAN-ADMIN-1366"
+            type: dhcp
         hardware:
           memory_mb: 2048
           num_cpus: 2
         customization:
-          hostname: "testgb-awx"
+          hostname: "testgb-awx-dhcp"
           domain: "prod.lan"
       register: deploy_result
 
-    - name: Wait for VM tools to start and IP to become available
+    - name: Wait for VMware Tools to report IP address
       vmware_guest_info:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
@@ -53,6 +50,6 @@
       delay: 15
       until: vm_info.instance.ip_address is defined and vm_info.instance.ip_address != ""
 
-    - name: Show the VM's IP address
+    - name: Show assigned IP address
       debug:
-        msg: "The IP address of the VM is: {{ vm_info.instance.ip_address }}"
+        msg: "VM IP address is {{ vm_info.instance.ip_address }}"
