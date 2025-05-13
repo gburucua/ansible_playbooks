@@ -10,6 +10,7 @@
     vcenter_username: "g.burucuasrvadm"
     vcenter_password: "ElcucuGerardin1390$"
     validate_certs: false
+    vm_name: "new-vm-from-awx"
 
   tasks:
     - name: Deploy a VM from template
@@ -20,7 +21,7 @@
         validate_certs: "{{ validate_certs }}"
         datacenter: "HST"
         folder: "/HST/vm/ROOT-VPS-CLIENTS/PROD-VPS"
-        name: "new-vm-from-awx"
+        name: "{{ vm_name }}"
         template: "ubuntu24"
         cluster: "VPS"
         resource_pool: "ROOT-VPS-CLIENTS"
@@ -39,5 +40,19 @@
           domain: "prod.lan"
       register: deploy_result
 
-    - debug:
-        var: deploy_result.instance.ip_address
+    - name: Wait for VM tools to start and IP to become available
+      vmware_guest_info:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        datacenter: "HST"
+        name: "{{ vm_name }}"
+      register: vm_info
+      retries: 10
+      delay: 15
+      until: vm_info.instance.ip_address is defined and vm_info.instance.ip_address != ""
+
+    - name: Show the VM's IP address
+      debug:
+        msg: "The IP address of the VM is: {{ vm_info.instance.ip_address }}"
