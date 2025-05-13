@@ -40,21 +40,3 @@
           hostname: "testgb-awx"
           domain: "prod.lan"
       register: deploy_result
-
-    - name: Wait for VMware tools to report IPs
-      vmware_guest_info:
-        hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
-        validate_certs: "{{ validate_certs }}"
-        name: "testgb-awx"
-        datacenter: "HST"
-        cluster: "VPS"
-      register: guest_info
-      retries: 10
-      delay: 15
-      until: guest_info.instance.ip_address is defined and guest_info.instance.ip_address != ""
-
-    - name: Debug collected IP addresses
-      debug:
-        var: guest_info.instance.ip_address
