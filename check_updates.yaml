@@ -1,16 +1,34 @@
 ---
-- name: Check for updates on Ubuntu
+- name: Check and optionally install updates on Debian/Ubuntu
   hosts: all
   become: yes
+  vars:
+    install_updates: false  # Override this to true in AWX if you want to install
+
   tasks:
+    - name: Ensure this is a Debian-based system
+      ansible.builtin.assert:
+        that: ansible_os_family == "Debian"
+        fail_msg: "This playbook only supports Debian-based systems."
+        success_msg: "Running on a Debian-based system (Debian/Ubuntu)."
+
     - name: Update the apt cache
       apt:
         update_cache: yes
+        cache_valid_time: 3600
 
     - name: List available updates
       command: apt list --upgradable
       register: update_output
+      changed_when: false
 
     - name: Show available updates
       debug:
         msg: "{{ update_output.stdout_lines }}"
+
+    - name: Optionally install all available updates
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      when: install_updates | bool
