@@ -28,7 +28,7 @@
           - name: "dVLAN-ADMIN-1366"
             type: dhcp
         hardware:
-          memory_mb: 2048
+          memory_mb: 4096
           num_cpus: 2
         customization:
           hostname: "{{ vm_name }}"
