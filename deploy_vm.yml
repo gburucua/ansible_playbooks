@@ -5,23 +5,17 @@
   collections:
     - community.vmware
 
-  vars:
-    vcenter_hostname: "10.100.39.2"
-    vcenter_username: "g.burucuasrvadm"
-    vcenter_password: "ElcucuGerardin1390$"
-    validate_certs: false
-
   tasks:
     - name: Deploy a VM from template with 2 NICs
       vmware_guest:
         hostname: "{{ vcenter_hostname }}"
         username: "{{ vcenter_username }}"
         password: "{{ vcenter_password }}"
-        validate_certs: "{{ validate_certs }}"
+        validate_certs: "{{ validate_certs | default(false) }}"
         datacenter: "HST"
         folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI"
-        name: "testgb-awx"
-        template: "ubuntu24"
+        name: "{{ vm_name }}"
+        template: "{{ vm_template }}"
         cluster: "VPS"
         resource_pool: "ROOT-VPS-CLIENTS"
         state: poweredon
@@ -37,6 +31,6 @@
           memory_mb: 2048
           num_cpus: 2
         customization:
-          hostname: "testgb-awx"
+          hostname: "{{ vm_name }}"
           domain: "prod.lan"
       register: deploy_result
