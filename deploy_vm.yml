@@ -9,8 +9,8 @@
     - name: Deploy a VM from template with 2 NICs
       vmware_guest:
         hostname: "{{ vcenter_hostname }}"
-        username: "{{ vcenter_username }}"
-        password: "{{ vcenter_password }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
         validate_certs: "{{ validate_certs | default(false) }}"
         datacenter: "HST"
         folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI"
