@@ -30,8 +30,8 @@
             type: dhcp
             start_connected: true
         hardware:
-          memory_mb: 4096
-          num_cpus: 2
+          memory_mb: "{{ vm_memory }}"
+          num_cpus: "{{ vm_cpu }}"
         customization:
           hostname: "{{ vm_name }}"
           domain: "prod.lan"
