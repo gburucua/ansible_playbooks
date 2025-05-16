@@ -42,10 +42,10 @@
     
     - name: Wait for SSH to be available on the new VM
       wait_for:
-      host: "{{ vm_ip }}"
-      port: 22
-      timeout: 300
-      state: started
+        host: "{{ vm_ip }}"
+        port: 22
+        timeout: 300
+        state: started
     
     - name: Configure static route via SSH from localhost
       ansible.builtin.shell: >
