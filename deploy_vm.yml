@@ -39,16 +39,3 @@
             - 195.78.26.211
             - 195.78.26.210
       register: deploy_result
-    
-    - name: Wait for SSH to be available on the new VM
-      wait_for:
-        host: "{{ vm_ip }}"
-        port: 22
-        timeout: 300
-        state: started
-    
-    - name: Configure static route via SSH from localhost
-      ansible.builtin.shell: >
-        ssh -o StrictHostKeyChecking=no debian@{{ vm_ip }}
-        "sudo ip route add 172.22.0.0/16 via 172.23.28.129 dev ens192 metric 110"
-      delegate_to: localhost
