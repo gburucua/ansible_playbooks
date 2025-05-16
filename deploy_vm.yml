@@ -20,14 +20,14 @@
         resource_pool: "ROOT-VPS-CLIENTS"
         state: poweredon
         networks:
-          - name: "dVLAN-ADMIN-1366"
-            type: dhcp
-            start_connected: true
           - name: "dVLAN-PROD-133"
             type: static
             ip: "{{ vm_ip }}"
             netmask: "255.255.255.128"
             gateway: "80.94.97.1"
+            start_connected: true
+          - name: "dVLAN-ADMIN-1366"
+            type: dhcp
             start_connected: true
         hardware:
           memory_mb: "{{ vm_memory }}"
