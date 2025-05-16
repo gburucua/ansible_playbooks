@@ -1,0 +1,6 @@
+- name: Configure static routes
+  hosts: deployed
+  become: true
+  tasks:
+    - name: Add static route
+      command: ip route add 172.22.0.0/16 via 172.23.28.129 dev ens192 metric 110
