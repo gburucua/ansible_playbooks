@@ -35,4 +35,7 @@
         customization:
           hostname: "{{ vm_name }}"
           domain: "prod.lan"
+          dns_servers:
+            - 195.78.26.211
+            - 195.78.26.210
       register: deploy_result
