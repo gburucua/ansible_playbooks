@@ -13,7 +13,7 @@
         password: "{{ ansible_password }}"
         validate_certs: "{{ validate_certs | default(false) }}"
         datacenter: "HST"
-        folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI/TEMPLATES"
+        folder: "/HST/vm/ROOT-VPS-CLIENTS/MTSI"
         name: "{{ vm_name }}"
         template: "{{ vm_template }}"
         cluster: "VPS"
